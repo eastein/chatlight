@@ -1,0 +1,38 @@
+#!/usr/bin/env python
+
+import mediorc
+import sys
+import trending
+
+class ChatLightBot(mediorc.IRC) :
+	def __init__(self, server, nick, chan, trender) :
+		self.trender = trender
+		mediorc.IRC.__init__(self, server, nick, chan)
+
+	def on_pubmsg(self, c, e) :
+		chan = e.target()
+		mask = e.source()
+		txt = e.arguments()[0]
+
+		if txt.startswith('!subject') :
+			n, r, c = self.trender.report(300)
+			if n == 0 :
+				self.connection.privmsg(chan, "It's so quiet.")
+			else :
+				self.connection.privmsg(chan, "%d chatters talking at %0.3f lines per second, dominating subject is %s" % (n, r, str(c)))
+
+		self.trender.log(mask, txt)
+
+class ChatLightThread(mediorc.IRCThread) :
+	def __init__(self, server, nick, chan, trender) :
+		self.bot_create = lambda: ChatLightBot(server, nick, chan, trender)
+		mediorc.IRCThread.__init__(self)
+
+if __name__ == '__main__' :
+	try :
+		clt = ChatLightThread(sys.argv[1], sys.argv[2], sys.argv[3], trending.Trender())
+	except IndexError :
+		print 'usage: chatlight <server> <nick> <chan>'
+		sys.exit(1)
+
+	clt.run()
