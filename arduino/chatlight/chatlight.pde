@@ -41,30 +41,99 @@ bool pwm_state[USEPINS];
   
 Blinker pwm;
 
+#define BUF_SIZE 32
+#define MSG_SIZE 2
+
 class CommandReceiver
   {
+private:
+  int used;
+  char buf[BUF_SIZE];
 public:
   CommandReceiver()
     {
+    used = 0;
+    }
+  
+  /*
+   * preconditions: used >= shift
+   */
+  void consumed(int shift)
+    {
+      for (int i = 0; i < used - shift; i++)
+        buf[i] = buf[i+shift];
+        
+      used -= shift;
     }
     
-  void recv()
+  void process_buffer()
     {
-    int av = Serial.available();
-    if (av >= 2)
+    /*
+    header is
+     :P
+     MSG_SIZE of payload
+     and then 1 byte that represents every preceding byte xor'd together
+    */
+    
+    if (used >= MSG_SIZE + 3)
+      { 
+      bool ok = true;
+      
+      ok = ok && (buf[0] == ':');
+      ok = ok && (buf[1] == 'P');
+
+      char xord = buf[0] ^ buf[1];
+      
+      for (int i = 2; i < MSG_SIZE + 2; i++)
+        {
+        xord ^= buf[i];
+        }
+        
+      ok = ok && (buf[MSG_SIZE + 2] == xord);
+      
+      /*
+      if (ok)
       {
-      char c1 = Serial.read();
-      char c2 = Serial.read();
+            delay(500);
+      consumed(used);
+      return;
+      }
+      */
       
-      uint16_t x;
-      *((char*)(&x)) = c1;
-      *((char*)(&x) + 1) = c1;
-      
-      delay(x);
+      if (ok)
+        {        
+        uint16_t x;
+        *((char*)(&x) + 1) = buf[2];
+        *((char*)(&x)) = buf[3];
+        
+        consumed(MSG_SIZE + 3);
+        delay(x);
+        }
+      else
+        {
+        consumed(1);
+        if (used == 0)
+          delay(2200);
+        }
       }
     }
+  
+  void recv()
+    {
+    int avail = Serial.available();
+    int cantake = BUF_SIZE - used;
+    int take;
     
-//  char buf[16];
+    if (avail <= cantake)
+      take = avail;
+    else
+      take = cantake;
+    
+    for (int i = 0; i < take; i++)
+      buf[used++] = Serial.read();
+    
+    process_buffer();
+    }
   };
 
 CommandReceiver cr;
