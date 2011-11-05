@@ -10,8 +10,6 @@ def wrap(s) :
 		xord ^= ord(msg[i + 1])
 	msg += chr(xord)
 
-	print repr(msg)
-
 	return msg
 
 def light_control_code(light, pwm_on, pwm_off, blink_on, blink_off) :

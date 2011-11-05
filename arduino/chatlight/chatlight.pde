@@ -41,7 +41,7 @@ bool pwm_state[USEPINS];
   
 Blinker pwm;
 
-#define BUF_SIZE 32
+#define BUF_SIZE 64
 #define MSG_SIZE 9
 
 class CommandReceiver
@@ -75,7 +75,8 @@ public:
      and then 1 byte that represents every preceding byte xor'd together
     */
     
-    if (used >= MSG_SIZE + 3)
+    // keep going until there definitely isn't enough data to read.
+    while (used >= MSG_SIZE + 3)
       { 
       bool ok = true;
       
@@ -90,15 +91,6 @@ public:
         }
         
       ok = ok && (buf[MSG_SIZE + 2] == xord);
-      
-      /*
-      if (ok)
-      {
-            delay(500);
-      consumed(used);
-      return;
-      }
-      */
       
       uint8_t ln;
       uint16_t _pwm_on;
@@ -117,6 +109,11 @@ public:
         *((char*)(&_pwm_off) + 1) = buf[5];
         *((char*)(&_pwm_off)) = buf[6];
         
+        *((char*)(&_blink_on) + 1) = buf[7];
+        *((char*)(&_blink_on)) = buf[8];
+        *((char*)(&_blink_off) + 1) = buf[9];
+        *((char*)(&_blink_off)) = buf[10];
+        
         pwm.pwm_on[ln]  = _pwm_on;
         pwm.pwm_off[ln] = _pwm_off;
         
@@ -124,9 +121,8 @@ public:
         }
       else
         {
+        // throw away a byte to re-align
         consumed(1);
-        if (used == 0)
-          delay(2200);
         }
       }
     }
