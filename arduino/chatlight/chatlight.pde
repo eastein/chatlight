@@ -41,6 +41,34 @@ bool pwm_state[USEPINS];
   
 Blinker pwm;
 
+class CommandReceiver
+  {
+public:
+  CommandReceiver()
+    {
+    }
+    
+  void recv()
+    {
+    int av = Serial.available();
+    if (av >= 2)
+      {
+      char c1 = Serial.read();
+      char c2 = Serial.read();
+      
+      uint16_t x;
+      *((char*)(&x)) = c1;
+      *((char*)(&x) + 1) = c1;
+      
+      delay(x);
+      }
+    }
+    
+//  char buf[16];
+  };
+
+CommandReceiver cr;
+
 void set_pins()
   {
   for (int i = 0; i < USEPINS; i++)
@@ -64,6 +92,8 @@ void setup()
 
 void loop() {
   delay(1);
+
+  cr.recv();
   pwm.step();
   set_pins();
 }
