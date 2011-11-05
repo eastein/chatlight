@@ -1,4 +1,6 @@
+#include "WProgram.h"
 #include "HardwareSerial.h"
+#include <Wire.h> 
 
 #define USEPINS 12
 #define LOWPIN 2
@@ -52,6 +54,7 @@ void set_pins()
 
 void setup()
   {
+  Serial.begin(115200);
   for (int i = 0; i < USEPINS; i++)
     {
     pinMode(i + LOWPIN, OUTPUT);
