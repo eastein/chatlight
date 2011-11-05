@@ -27,7 +27,7 @@ public:
         if (pwm_cnt[i] == 0)
           pwm_cnt[i] = pwm_on[i] + pwm_off[i];
         
-        if (pwm_cnt[i] > pwm_on[i])
+        if (pwm_cnt[i] > pwm_off[i])
           pwm_state[i] = true;
         else
           pwm_state[i] = false;
@@ -42,7 +42,7 @@ bool pwm_state[USEPINS];
 Blinker pwm;
 
 #define BUF_SIZE 32
-#define MSG_SIZE 2
+#define MSG_SIZE 9
 
 class CommandReceiver
   {
@@ -100,14 +100,27 @@ public:
       }
       */
       
+      uint8_t ln;
+      uint16_t _pwm_on;
+      uint16_t _pwm_off;
+      uint16_t _blink_on;
+      uint16_t _blink_off;
+
+      *((char*) (&ln)) = buf[2];
+      
+      ok = ok && (ln < USEPINS);
+
       if (ok)
-        {        
-        uint16_t x;
-        *((char*)(&x) + 1) = buf[2];
-        *((char*)(&x)) = buf[3];
+        {
+        *((char*)(&_pwm_on) + 1) = buf[3];
+        *((char*)(&_pwm_on)) = buf[4];
+        *((char*)(&_pwm_off) + 1) = buf[5];
+        *((char*)(&_pwm_off)) = buf[6];
+        
+        pwm.pwm_on[ln]  = _pwm_on;
+        pwm.pwm_off[ln] = _pwm_off;
         
         consumed(MSG_SIZE + 3);
-        delay(x);
         }
       else
         {
