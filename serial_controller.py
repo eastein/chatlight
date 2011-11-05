@@ -1,7 +1,7 @@
+import sys
 import time
 import serial
-
-s = serial.Serial('/dev/ttyUSB1', 115200, timeout=1)
+import struct
 
 def wrap(s) :
 	msg = ':P' + s
@@ -16,7 +16,6 @@ def wrap(s) :
 	return msg
 
 if __name__ == '__main__' :
-	while True :
-		time.sleep(3)
-		msg = "\x03\xe8"
-		s.write(wrap(msg))
+	s = serial.Serial('/dev/ttyUSB1', 115200, timeout=1)
+	msg = struct.pack('!H', int(sys.argv[1]))
+	s.write(wrap(msg))
