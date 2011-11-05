@@ -12,8 +12,8 @@ public:
     {
     for (int i = 0; i < USEPINS; i++)
       {
-      pwm_off[i] = 30 + i * 30;
-      pwm_on[i] = 20;
+      pwm_off[i] = 0;
+      pwm_on[i] = 100;
       pwm_state[i] = true;
       pwm_cnt[i] = pwm_on[i] + pwm_off[i];
       }
@@ -40,6 +40,7 @@ bool pwm_state[USEPINS];
   };
   
 Blinker pwm;
+Blinker bln;
 
 #define BUF_SIZE 64
 #define MSG_SIZE 9
@@ -114,8 +115,12 @@ public:
         *((char*)(&_blink_off) + 1) = buf[9];
         *((char*)(&_blink_off)) = buf[10];
         
+        // it might be nice to add a function for this on the Blinkers that's smart enough to set up
+        // _state to be in the right part of the cycle to transit more smoothly between the blink modes.
         pwm.pwm_on[ln]  = _pwm_on;
         pwm.pwm_off[ln] = _pwm_off;
+        bln.pwm_on[ln]  = _blink_on;
+        bln.pwm_off[ln] = _blink_off;
         
         consumed(MSG_SIZE + 3);
         }
@@ -151,7 +156,7 @@ void set_pins()
   {
   for (int i = 0; i < USEPINS; i++)
     {
-    if (pwm.pwm_state[i])
+    if (pwm.pwm_state[i] && bln.pwm_state[i])
       digitalWrite(i + LOWPIN, HIGH);
     else
       digitalWrite(i + LOWPIN, LOW);
@@ -173,5 +178,6 @@ void loop() {
 
   cr.recv();
   pwm.step();
+  bln.step();
   set_pins();
 }
