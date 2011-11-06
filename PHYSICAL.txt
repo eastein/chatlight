@@ -1,0 +1,14 @@
+# Measurements
+
+* Plexi: 291.5mm x 315.5mm
+* Wood: (cross section) 19.6mm x 90mm
+
+## Derived measurements
+
+* cut depth for fitting front plate: 4mm
+* "further" distance than the edge covered for the outer (longer) edges: 31.2mm (19.6-4) * 2
+
+# 2 pieces each
+
+* long edge: 346.7mm
+* long edge: 322.7mm
