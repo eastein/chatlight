@@ -3,11 +3,20 @@
 import mediorc
 import sys
 import trending
+import time
 
 class ChatLightBot(mediorc.IRC) :
 	def __init__(self, server, nick, chan, trender) :
+		self.retain = 300
+		self.period = 10
+		self.last_period_operation = time.time()
 		self.trender = trender
 		mediorc.IRC.__init__(self, server, nick, chan)
+
+	def do_work(self) :
+		if time.time() > self.last_period_operation + self.period :
+			self.last_period_operation = time.time()
+			self.trender.report(self.retain)
 
 	def on_pubmsg(self, c, e) :
 		chan = e.target()
@@ -15,7 +24,7 @@ class ChatLightBot(mediorc.IRC) :
 		txt = e.arguments()[0]
 
 		if txt.startswith('!subject') :
-			n, r, c = self.trender.report(300)
+			n, r, c = self.trender.report(self.retain)
 			if n == 0 :
 				self.connection.privmsg(chan, "It's so quiet.")
 			else :
@@ -30,9 +39,13 @@ class ChatLightThread(mediorc.IRCThread) :
 
 if __name__ == '__main__' :
 	try :
-		clt = ChatLightThread(sys.argv[1], sys.argv[2], sys.argv[3], trending.Trender())
+		try :
+			zmq_url = sys.argv[4]
+		except IndexError :
+			zmq_url = None
+		clt = ChatLightThread(sys.argv[1], sys.argv[2], sys.argv[3], trending.Trender(zmq_url))
 	except IndexError :
-		print 'usage: chatlight <server> <nick> <chan>'
+		print 'usage: chatlight <server> <nick> <chan> [zmq_url]'
 		sys.exit(1)
 
 	clt.run()
