@@ -8,7 +8,7 @@ import time
 class ChatLightBot(mediorc.IRC) :
 	def __init__(self, server, nick, chan, trender) :
 		self.retain = 300
-		self.period = 10
+		self.period = 3
 		self.last_period_operation = time.time()
 		self.trender = trender
 		mediorc.IRC.__init__(self, server, nick, chan)
@@ -29,6 +29,8 @@ class ChatLightBot(mediorc.IRC) :
 				self.connection.privmsg(chan, "It's so quiet.")
 			else :
 				self.connection.privmsg(chan, "%d chatters talking at %0.3f lines per second, dominating subject is %s" % (n, r, str(c)))
+		elif txt.startswith('!page') :
+			self.trender.publish({'type':'page'})
 
 		self.trender.log(mask, txt)
 

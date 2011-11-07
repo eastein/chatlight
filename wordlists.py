@@ -125,3 +125,13 @@ L_OUTDOORS = [
 	'ski',
 	'snowboard'
 ]
+
+COLORS = {
+	"OUTDOORS" : "green",
+	"RELIGION" : "yellow",
+	"ART" : "yellow",
+	"SEXUAL" : "red",
+	"ELECTRONICS" : "blue",
+	"COMPUTERS" : "blue",
+	"INTERNET" : "yellow"
+}

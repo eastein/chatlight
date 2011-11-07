@@ -32,6 +32,11 @@ class Trender(object) :
 		cat = self.analyzer.categorize(line)
 		self.events.append((ts, mask, line, cat))
 
+
+	def publish(self, obj) :
+		if hasattr(self, 'zmq_socket') :
+			self.zmq_socket.send(json.dumps(obj))
+
 	def report(self, sec) :
 		self.cleanup(sec)
 
@@ -59,6 +64,5 @@ class Trender(object) :
 					max_cat = catcnt[cat]
 					category = cat
 
-		if hasattr(self, 'zmq_socket') :
-			self.zmq_socket.send(json.dumps({'chatters':n_chatters, 'rate':n_lps, 'category':category}))
+		self.publish({'type':'chat_report', 'chatters':n_chatters, 'rate':n_lps, 'category':category})
 		return n_chatters, n_lps, category

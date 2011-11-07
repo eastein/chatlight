@@ -16,3 +16,9 @@
 # Backing board
 
 273mm x 312mm x 19mm
+
+* 6: yellow
+* 7: blue
+* 8: red
+* 9: white
+* 10: green
