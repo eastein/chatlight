@@ -59,7 +59,7 @@ if __name__ == '__main__' :
 				if r > 2.0 :
 					r = 2.0
 
-				if r > 1/60.0 :
+				if r > 1/120.0 :
 					blink_on = int(1000 * 1/r * 4)
 
 				print 'blink_on = %d' % blink_on
