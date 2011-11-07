@@ -30,7 +30,11 @@ L_COMPUTERS = [
 	'postgres',
 	'postfix',
 	'amd',
-	'intel'
+	'intel',
+	'https://github',
+	'git',
+	'svn',
+	'subversion'
 ]
 
 L_INTERNET = [
@@ -126,11 +130,20 @@ L_OUTDOORS = [
 	'snowboard'
 ]
 
+L_NIGHTLIFE = [
+	'bar',
+	'clubbing',
+	'cocktails',
+	'danc',
+	'mixer'
+]
+
 COLORS = {
 	"OUTDOORS" : "green",
 	"RELIGION" : "yellow",
 	"ART" : "yellow",
 	"SEXUAL" : "red",
+	"NIGHTLIFE" : "red",
 	"ELECTRONICS" : "blue",
 	"COMPUTERS" : "blue",
 	"INTERNET" : "yellow"
