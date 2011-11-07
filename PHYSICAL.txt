@@ -12,3 +12,7 @@
 
 * long edge: 346.7mm
 * long edge: 322.7mm
+
+# Backing board
+
+273mm x 312mm x 19mm
