@@ -97,7 +97,8 @@ L_SEXUAL = [
 	'boob',
 	'penis',
 	'breast',
-	'butt'
+	'butt',
+	'porn'
 ]
 
 L_RELIGION = [
