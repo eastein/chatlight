@@ -6,18 +6,18 @@ import struct
 
 class ChatlightController(object) :
 	TOPLIGHTS = 6
-	LN_TOP0 = 5
-	LN_TOP1 = 4
-	LN_TOP2 = 3
-	LN_TOP3 = 2
+	LN_TOP0 = 6
+	LN_TOP1 = 3
+	LN_TOP2 = 5
+	LN_TOP3 = 4
 	LN_TOP4 = 1
-	LN_TOP5 = 0
+	LN_TOP5 = 2
 	
-	LN_MAINRED = 8
-	LN_MAINBLUE = 7
-	LN_MAINGREEN = 10
-	LN_MAINYELLOW = 6
-	LN_MAINWHITE = 9
+	LN_MAINRED = 10
+	LN_MAINBLUE = 8
+	LN_MAINGREEN = 11
+	LN_MAINYELLOW = 9
+	LN_MAINWHITE = 7
 
 	def __init__(self, s) :
 		self.serial = s

@@ -60,11 +60,14 @@ if __name__ == '__main__' :
 					r = 2.0
 
 				if r > 1/120.0 :
-					blink_on = int(1000 * 1/r * 4)
+					blink_on = int(1000 * 1/r * 35)
 
 				print 'blink_on = %d' % blink_on
 
-				ctl.set_main({color : (1, 4, blink_on, 800)})
+				if blink_on > 0 :
+					ctl.set_main({color : (1, 4, blink_on, 800)})
+				else :
+					ctl.set_main(dict())
 			elif msg['type'] == 'page' :
 				# TODO make this actually cool to look at, this is silly
 				# will there be a buzzer added maybe?
