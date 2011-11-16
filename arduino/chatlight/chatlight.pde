@@ -13,7 +13,7 @@ public:
     for (int i = 0; i < USEPINS; i++)
       {
       pwm_off[i] = 0;
-      pwm_on[i] = 100;
+      pwm_on[i] = 1;
       pwm_state[i] = true;
       pwm_cnt[i] = pwm_on[i] + pwm_off[i];
       }
@@ -33,6 +33,25 @@ public:
           pwm_state[i] = false;
       }
     }
+    
+  void transition(int i, uint16_t on, uint16_t off)
+    {
+    if (pwm_cnt[i] > pwm_off[i])
+      {
+      /* stay on for the shortest time possible without making this state duration (from now)
+      less than the minimum of the previous pwm_on and the new pwm_on */
+      uint16_t continue_for = min(pwm_cnt[i] - pwm_off[i], on);
+      pwm_cnt[i] = off + continue_for;
+      }
+    else
+      {
+      pwm_cnt[i] = min(pwm_cnt[i], off);
+      }
+      
+    pwm_on[i] = on;
+    pwm_off[i] = off;
+    }
+    
 uint16_t pwm_off[USEPINS];
 uint16_t pwm_on[USEPINS];
 uint16_t pwm_cnt[USEPINS];
@@ -114,14 +133,10 @@ public:
         *((char*)(&_blink_on)) = buf[8];
         *((char*)(&_blink_off) + 1) = buf[9];
         *((char*)(&_blink_off)) = buf[10];
-        
-        // it might be nice to add a function for this on the Blinkers that's smart enough to set up
-        // _state to be in the right part of the cycle to transit more smoothly between the blink modes.
-        pwm.pwm_on[ln]  = _pwm_on;
-        pwm.pwm_off[ln] = _pwm_off;
-        bln.pwm_on[ln]  = _blink_on;
-        bln.pwm_off[ln] = _blink_off;
-        
+
+        pwm.transition(ln, _pwm_on, _pwm_off);
+        bln.transition(ln, _blink_on, _blink_off);
+
         consumed(MSG_SIZE + 3);
         }
       else
