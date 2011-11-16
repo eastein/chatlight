@@ -12,8 +12,8 @@ public:
     {
     for (int i = 0; i < USEPINS; i++)
       {
-      pwm_off[i] = 0;
-      pwm_on[i] = 1;
+      pwm_off[i] = 1;
+      pwm_on[i] = 0;
       pwm_state[i] = true;
       pwm_cnt[i] = pwm_on[i] + pwm_off[i];
       }
@@ -185,6 +185,20 @@ void setup()
     {
     pinMode(i + LOWPIN, OUTPUT);
     }
+  
+  for (int i = 1; i <= 6; i++)
+    {
+    pwm.transition(i, 1, 0);
+    bln.transition(i, 1000, 5000);
+    }
+
+  bln.pwm_cnt[6] = 1;
+  bln.pwm_cnt[3] = 1001;
+  bln.pwm_cnt[5] = 2001;
+  bln.pwm_cnt[4] = 3001;
+  bln.pwm_cnt[1] = 4001;
+  bln.pwm_cnt[2] = 5001;
+
   set_pins();
   }
 
