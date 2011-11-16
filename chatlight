@@ -18,6 +18,13 @@ class ChatLightBot(mediorc.IRC) :
 			self.last_period_operation = time.time()
 			self.trender.report(self.retain)
 
+	def on_action(self, c, e) :
+		chan = e.target()
+		mask = e.source()
+		txt = e.arguments()[0]
+
+		self.trender.log(mask, txt)
+
 	def on_pubmsg(self, c, e) :
 		chan = e.target()
 		mask = e.source()
@@ -31,8 +38,8 @@ class ChatLightBot(mediorc.IRC) :
 				self.connection.privmsg(chan, "%d chatters talking at %0.3f lines per second, dominating subject is %s" % (n, r, str(c)))
 		elif txt.startswith('!page') :
 			self.trender.publish({'type':'page'})
-
-		self.trender.log(mask, txt)
+		else :
+			self.trender.log(mask, txt)
 
 class ChatLightThread(mediorc.IRCThread) :
 	def __init__(self, server, nick, chan, trender) :
