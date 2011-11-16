@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+
+import os, os.path
 import sys
 import time
 import json
@@ -6,21 +9,48 @@ import serial
 import serial_controller
 import wordlists
 
+def auto_device() :
+	# TODO work on non-linux (for you, the person who cares! Who isn't me! Have fun!)
+	devdir = '/dev'
+	look = lambda: [(dev, os.stat(dev)) for dev in [os.path.join(devdir, dev) for dev in os.listdir(devdir) if 'ttyUSB' in dev]]
+	devs = look()
+	while not devs :
+		time.sleep(0.5)
+		print 'auto_device waiting for devices...'
+		devs = look()
+
+	dev = None
+	ts = 0
+	for d, st in devs :
+		ts_this = max(st.st_mtime, st.st_ctime)
+		if ts_this > ts :
+			dev = d
+
+	print 'auto selected device %s' % dev
+	return dev
+
+def device_selector(arg) :
+	if arg == 'auto' :
+		return lambda: auto_device()
+	return lambda: arg
+
 if __name__ == '__main__' :
 	zmq_url = sys.argv[1]
-	device = '/dev/ttyUSB0'
+	device_arg = 'auto'
 	try :
-		device = sys.argv[2]
+		device_arg = sys.argv[2]
 	except IndexError :
 		pass
+
+	device = device_selector(device_arg)
 
 	c = zmq.Context(1)
 	s = c.socket(zmq.SUB)
 	s.connect(zmq_url)
 	s.setsockopt (zmq.SUBSCRIBE, "")
 
-	ser = serial.Serial(device, 115200, timeout=1)
-	ctl = serial_controller.ChatlightController(ser)
+	serial_opener = lambda: serial.Serial(device(), 115200, timeout=1)
+	ctl = serial_controller.ChatlightController(serial_opener)
 
 	for n in ctl.lightnames :
 		ctl.off(getattr(ctl, n))

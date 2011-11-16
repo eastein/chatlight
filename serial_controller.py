@@ -19,8 +19,9 @@ class ChatlightController(object) :
 	LN_MAINYELLOW = 9
 	LN_MAINWHITE = 7
 
-	def __init__(self, s) :
-		self.serial = s
+	def __init__(self, serial_opener) :
+		self.serial_opener = serial_opener
+		self.serial = self.serial_opener()
 		self.mains = list()
 	
 	@property
@@ -83,14 +84,26 @@ class ChatlightController(object) :
 
 	def set_parameters(self, light, pwm_on, pwm_off, blink_on, blink_off) :
 		msg = self.light_control_code(light, pwm_on, pwm_off, blink_on, blink_off)
-		self.serial.write(self.wrap(msg))
+		msg = self.wrap(msg)
+		while True :
+			try :
+				if self.serial :
+					self.serial.write(msg)
+					break
+			except OSError :
+				self.serial = None
 
+			if self.serial is None :
+				try :
+					self.serial = self.serial_opener()
+				except serial.serialutil.SerialException :
+					time.sleep(0.5)
 if __name__ == '__main__' :
 	device = '/dev/ttyUSB0'
 	try :
 		device = sys.argv[6]
 	except IndexError :
 		pass
-	s = serial.Serial(device, 115200, timeout=1)
+	s = lambda: serial.Serial(device, 115200, timeout=1)
 	clc = ChatlightController(s)
 	clc.set_parameters(int(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3]), int(sys.argv[4]), int(sys.argv[5]))
