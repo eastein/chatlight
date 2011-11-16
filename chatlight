@@ -38,8 +38,8 @@ class ChatLightBot(mediorc.IRC) :
 				self.connection.privmsg(chan, "%d chatters talking at %0.3f lines per second, dominating subject is %s" % (n, r, str(c)))
 		elif txt.startswith('!page') :
 			self.trender.publish({'type':'page'})
-		else :
-			self.trender.log(mask, txt)
+
+		self.trender.log(mask, txt)
 
 class ChatLightThread(mediorc.IRCThread) :
 	def __init__(self, server, nick, chan, trender) :
