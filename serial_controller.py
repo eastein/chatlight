@@ -92,7 +92,9 @@ class ChatlightController(object) :
 					break
 			except OSError :
 				self.serial = None
-
+			except serial.serialutil.SerialException :
+				self.serial = None
+			
 			if self.serial is None :
 				try :
 					self.serial = self.serial_opener()
