@@ -18,6 +18,14 @@ public:
       pwm_cnt[i] = pwm_on[i] + pwm_off[i];
       }
     }
+
+  void comprehend(int i)
+    {
+    if (pwm_cnt[i] > pwm_off[i])
+      pwm_state[i] = true;
+    else
+      pwm_state[i] = false;
+    }
     
   void step()
     {
@@ -26,11 +34,8 @@ public:
         pwm_cnt[i]--;
         if (pwm_cnt[i] == 0)
           pwm_cnt[i] = pwm_on[i] + pwm_off[i];
-        
-        if (pwm_cnt[i] > pwm_off[i])
-          pwm_state[i] = true;
-        else
-          pwm_state[i] = false;
+
+        comprehend(i);
       }
     }
     
@@ -50,6 +55,7 @@ public:
       
     pwm_on[i] = on;
     pwm_off[i] = off;
+    comprehend(i);
     }
     
 uint16_t pwm_off[USEPINS];
@@ -193,12 +199,16 @@ void setup()
     }
 
   bln.pwm_cnt[6] = 1;
+
   bln.pwm_cnt[3] = 1001;
   bln.pwm_cnt[5] = 2001;
   bln.pwm_cnt[4] = 3001;
   bln.pwm_cnt[1] = 4001;
   bln.pwm_cnt[2] = 5001;
 
+  for (int i = 1; i <= 6; i++)
+    bln.comprehend(i);
+  
   set_pins();
   }
 
