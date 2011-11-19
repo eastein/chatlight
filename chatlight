@@ -37,7 +37,9 @@ class ChatLightBot(mediorc.IRC) :
 			else :
 				self.connection.privmsg(chan, "%d chatters talking at %0.3f lines per second, dominating subject is %s" % (n, r, str(c)))
 		elif txt.startswith('!page') :
+			# throttle?
 			self.trender.publish({'type':'page'})
+			self.connection.privmsg(chan, "Hailing the station.  There are no guarantees.")
 
 		self.trender.log(mask, txt)
 
