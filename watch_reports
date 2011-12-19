@@ -101,9 +101,9 @@ if __name__ == '__main__' :
 				else :
 					ctl.set_main(dict())
 			elif msg['type'] == 'page' :
-				ctl.set_main({"blue" : (1, 5, 500, 500), "yellow" : (1, 3, 500, 500)})
+				ctl.set_main({"strobe" : (1, 0, 1, 0), "blue" : (1, 5, 500, 500), "yellow" : (1, 3, 500, 500)})
 				print 'set paging settings.'
-				time.sleep(20)
+				time.sleep(10)
 				if ctl.revert_main() :
 					print 'reverted paging settings'
 				else :

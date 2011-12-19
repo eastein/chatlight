@@ -6,6 +6,7 @@ import struct
 
 class ChatlightController(object) :
 	TOPLIGHTS = 6
+	
 	LN_TOP0 = 6
 	LN_TOP1 = 3
 	LN_TOP2 = 5
@@ -13,12 +14,13 @@ class ChatlightController(object) :
 	LN_TOP4 = 1
 	LN_TOP5 = 2
 	
+	LN_MAINSTROBE = 0
 	LN_MAINRED = 10
 	LN_MAINBLUE = 8
 	LN_MAINGREEN = 11
 	LN_MAINYELLOW = 9
 	LN_MAINWHITE = 7
-
+	
 	def __init__(self, serial_opener) :
 		self.serial_opener = serial_opener
 		self.serial = self.serial_opener()
@@ -74,7 +76,10 @@ class ChatlightController(object) :
 
 		for n in filter(lambda s: s.startswith('LN_MAIN'), dir(self)) :
 			if n not in _d :
-				_d[n] = (0, 1, 0, 1)
+				self.set_parameters(getattr(self, n), 0, 1, 0, 1)
+
+		# wait for the off commands to sink in first
+		time.sleep(0.01)
 
 		for k in _d :
 			self.set_parameters(getattr(self, k), *(_d[k]))
