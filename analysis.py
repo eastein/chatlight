@@ -1,5 +1,6 @@
 import wordlists
 import re
+import random
 
 MATCH_CAT = re.compile('^L_(.*)$')
 
@@ -19,6 +20,9 @@ class Analyzer(object) :
 
 	def categorize(self, line) :
 		words = line.lower().split(' ')
+		# in order to not bias towards the beginning of the sentence in
+		# tie situations, we should randomize the word analysis order.
+		random.shuffle(words)
 		catcounts = {}
 		maxc = 0
 		selected_cat = None

@@ -53,7 +53,9 @@ class Trender(object) :
 		max_cat = 0
 		category = None
 		catcnt = {}
-		for chatter in chatters.values() :
+		randomized_chatters = chatters.values()
+		random.shuffle(randomized_chatters)
+		for chatter in randomized_chatters :
 			for cat in chatter.categories :
 				catcnt.setdefault(cat, 0)
 				catcnt[cat] += 1

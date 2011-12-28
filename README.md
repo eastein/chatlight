@@ -38,3 +38,10 @@ The arduino sketch listens on the serial input and also operates the blinkers.  
 # TODO
 
 * usage for both programs
+
+<A name="toc1-41" title="Tests" />
+# Tests
+
+To run unit tests, use:
+
+    nosetests -vv tests
