@@ -190,6 +190,7 @@ void setup()
   for (int i = 0; i < USEPINS; i++)
     {
     pinMode(i + LOWPIN, OUTPUT);
+    digitalWrite(i + LOWPIN, LOW);
     }
   
   for (int i = 1; i <= 6; i++)
