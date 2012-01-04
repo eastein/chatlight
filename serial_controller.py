@@ -78,8 +78,13 @@ class ChatlightController(object) :
 			if n not in _d :
 				self.set_parameters(getattr(self, n), 0, 1, 0, 1)
 
+		try :
+			self.serial.flush()
+		except :
+			print 'got some error during flushing of the serial link, ignoring it.'
+		
 		# wait for the off commands to sink in first
-		time.sleep(0.01)
+		time.sleep(0.025)
 
 		for k in _d :
 			self.set_parameters(getattr(self, k), *(_d[k]))
