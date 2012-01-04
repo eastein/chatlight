@@ -195,7 +195,7 @@ void setup()
   
   for (int i = 1; i <= 6; i++)
     {
-    pwm.transition(i, 1, 0);
+    pwm.transition(i, 1, 12);
     bln.transition(i, 1000, 5000);
     }
 
