@@ -73,7 +73,7 @@ if __name__ == '__main__' :
 				for i in range(ctl.TOPLIGHTS) :
 					if i < n :
 						# fix dimming TODO
-						ctl.set_parameters(getattr(ctl, 'LN_TOP%d' % i), 1, 7, 1, 0)
+						ctl.set_parameters(getattr(ctl, 'LN_TOP%d' % i), 1, 12, 1, 0)
 					else :
 						ctl.off(getattr(ctl, 'LN_TOP%d' % i))
 				print 'set up top lights'
