@@ -10,11 +10,16 @@ class Blinker
 public:
   Blinker()
     {
+    setup();
+    }
+  
+  void setup()
+    {
     for (int i = 0; i < USEPINS; i++)
       {
       pwm_off[i] = 1;
       pwm_on[i] = 0;
-      pwm_state[i] = true;
+      pwm_state[i] = false;
       pwm_cnt[i] = pwm_on[i] + pwm_off[i];
       }
     }
@@ -186,6 +191,9 @@ void set_pins()
 
 void setup()
   {
+  pwm.setup();
+  bln.setup();
+  
   Serial.begin(115200);
   for (int i = 0; i < USEPINS; i++)
     {
@@ -207,8 +215,8 @@ void setup()
   bln.pwm_cnt[1] = 4001;
   bln.pwm_cnt[2] = 5001;
 
-  for (int i = 1; i <= 6; i++)
-    bln.comprehend(i);
+  for (int i = 0; i < USEPINS; i++)
+    bln.comprehend(i + LOWPIN);
   
   set_pins();
   }
