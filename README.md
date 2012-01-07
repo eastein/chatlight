@@ -31,15 +31,17 @@ The arduino sketch listens on the serial input and also operates the blinkers.  
 <A name="toc1-30" title="Example" />
 # Example
 
-    ./watch_reports tcp://127.0.0.1:23000
-    ./chatlight irc.example.org nick34231 #channel tcp://0.0.0.0:23000
+These both run in parallel.
 
-<A name="toc1-36" title="TODO" />
+    ./watch_reports tcp://127.0.0.1:23000
+    ./chatlight irc.example.org nick34231 \#channel tcp://0.0.0.0:23000
+
+<A name="toc1-38" title="TODO" />
 # TODO
 
 * usage for both programs
 
-<A name="toc1-41" title="Tests" />
+<A name="toc1-43" title="Tests" />
 # Tests
 
 To run unit tests, use:

@@ -24,8 +24,10 @@ The arduino sketch listens on the serial input and also operates the blinkers.  
 
 # Example
 
+These both run in parallel.
+
     ./watch_reports tcp://127.0.0.1:23000
-    ./chatlight irc.example.org nick34231 #channel tcp://0.0.0.0:23000
+    ./chatlight irc.example.org nick34231 \#channel tcp://0.0.0.0:23000
 
 # TODO
 
